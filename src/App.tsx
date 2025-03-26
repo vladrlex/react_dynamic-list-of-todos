@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -27,21 +27,23 @@ export const App: React.FC = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const filteredTodos = todos
-    .filter(todo => {
-      if (filterStatus === FilterStatus.Active) {
-        return !todo.completed;
-      }
+  const filteredTodos = useMemo(() => {
+    return todos
+      .filter(todo => {
+        if (filterStatus === FilterStatus.Active) {
+          return !todo.completed;
+        }
 
-      if (filterStatus === FilterStatus.Completed) {
-        return todo.completed;
-      }
+        if (filterStatus === FilterStatus.Completed) {
+          return todo.completed;
+        }
 
-      return true;
-    })
-    .filter(todo =>
-      todo.title.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+        return true;
+      })
+      .filter(todo =>
+        todo.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+  }, [todos, filterStatus, searchQuery]);
 
   return (
     <>
